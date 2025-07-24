@@ -17,11 +17,18 @@ export default function AddCase() {
             {/* Header */}
             <div className="case-detail-item xlarge">
                 <div className="case-add-driver-name">
+                    <div style={{ display: "flex", flexDirection: "column",  gap: "16px" }}>
+                        <img
+                            src={imagePreview || "http://institutcommotions.com/wp-content/uploads/2018/05/blank-profile-picture-973460_960_720-1.png"}
+                            alt="Driver Preview"
+                            className="case-detail-avatar"
+                        />
+                    </div>
                     <div>
                         <h2 className="">Add a Case</h2>
                         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                            <label className='add-case-label'>Driver Name</label>
-                            <input type="text" placeholder="Driver Name" className='add-case-input-search' />
+                            <label className='add-case-label'>Full Name</label>
+                            <input type="text" placeholder="Enter a User Name or ID" className='add-case-input-search' />
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                             <label className='add-case-label'>Trip ID</label>
@@ -35,14 +42,6 @@ export default function AddCase() {
                                 <option value="Accident" className='add-case-dropdown-option'>Accident</option>
                             </select>
                         </div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column",  gap: "16px" }}>
-                        <img
-                            src={imagePreview || "https://i.pravatar.cc/100?img=3"}
-                            alt="Driver Preview"
-                            className="case-detail-avatar"
-                        />
-                        <input type="file" accept="image/*" onChange={handleImageChange} />
                     </div>
                 </div>
             </div>
