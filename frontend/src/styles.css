@@ -505,6 +505,11 @@ input[type="checkbox"]:checked+.toggle-switch::before {
   cursor: pointer;
 }
 
+.sort-btn.active-sort {
+  background-color: #ddd;
+  font-weight: bold;
+}
+
 .clear-btn {
   background-color: #dc3545;
 }

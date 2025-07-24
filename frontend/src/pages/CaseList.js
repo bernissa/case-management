@@ -25,10 +25,6 @@ export default function CaseList() {
         navigate(`/cases/${id}`);
     };
 
-    // const filteredCases = filterType === 'ALL'
-    //     ? mockCaseList
-    //     : mockCaseList.filter((item) => item.type === filterType);
-
     const [searchName, setSearchName] = useState('');
     const [driverIdFilter, setDriverIdFilter] = useState('');
     const [caseIdFilter, setCaseIdFilter] = useState('');
@@ -38,6 +34,8 @@ export default function CaseList() {
     const [statusFilter, setStatusFilter] = useState('');
     const [actionFilter, setActionFilter] = useState('');
     const [repeatOffenderOnly, setRepeatOffenderOnly] = useState(false); // if applicable
+    const [sortLatest, setSortLatest] = useState(false);
+
 
     const clearFilters = () => {
         setSearchName('');
@@ -55,16 +53,23 @@ export default function CaseList() {
         setCurrentPage(1);
     }, [searchName, driverIdFilter, caseIdFilter, tripIdFilter, fromDate, toDate, statusFilter, actionFilter, repeatOffenderOnly]);
 
+    const parseDate = (dateStr) => {
+        const [day, month, year] = dateStr.split('/');
+        return new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+    };
+
+
     const filteredCases = mockCaseList.filter((item) => {
         const matchesType = filterType === 'ALL' || item.type === filterType;
         const matchesName = item.name.toLowerCase().includes(searchName.toLowerCase());
         const matchesDriverId = item.driverId.includes(driverIdFilter);
-        const matchesCaseId = item.id.toString().includes(caseIdFilter); // assuming case ID is item.id
+        const matchesCaseId = item.id.toString().includes(caseIdFilter);
         const matchesTripId = item.tripId.includes(tripIdFilter);
         const matchesStatus = statusFilter === '' || item.status === statusFilter;
         const matchesAction = actionFilter === '' || item.action === actionFilter;
-        const matchesFromDate = fromDate === '' || new Date(item.effectDate) >= new Date(fromDate);
-        const matchesToDate = toDate === '' || new Date(item.effectDate) <= new Date(toDate);
+        const matchesFromDate = fromDate === '' || parseDate(item.effectDate) >= new Date(fromDate);
+        const matchesToDate = toDate === '' || parseDate(item.effectDate) <= new Date(toDate);
+
         const matchesRepeat = !repeatOffenderOnly || item.repeatOffender === true;
 
         return (
@@ -88,7 +93,13 @@ export default function CaseList() {
     const totalPages = Math.ceil(totalCases / casesPerPage);
     const indexOfLastCase = currentPage * casesPerPage;
     const indexOfFirstCase = indexOfLastCase - casesPerPage;
-    const currentCases = filteredCases.slice(indexOfFirstCase, indexOfLastCase);
+    // const currentCases = filteredCases.slice(indexOfFirstCase, indexOfLastCase);
+    const sortedCases = sortLatest
+        ? [...filteredCases].sort((a, b) => parseDate(b.effectDate) - parseDate(a.effectDate))
+        : filteredCases;
+
+    const currentCases = sortedCases.slice(indexOfFirstCase, indexOfLastCase);
+
 
 
     const goToPage = (pageNumber) => {
@@ -102,7 +113,7 @@ export default function CaseList() {
     const deliveryCount = mockCaseList.filter(item => item.type === "Delivery").length;
     const accidentCount = mockCaseList.filter(item => item.type === "Accident").length;
 
-    
+
 
 
     return (
@@ -212,7 +223,13 @@ export default function CaseList() {
                                 <option value="SUSPENSION">Suspension</option>
                                 <option value="BAN">Ban</option>
                             </select>
-                            <button className="sort-btn">Sort Latest</button>
+                            <button
+                                className={`sort-btn ${sortLatest ? 'active-sort' : ''}`}
+                                onClick={() => setSortLatest(!sortLatest)}
+                            >
+                                Sort Latest {sortLatest ? '↓' : ''}
+                            </button>
+
                         </div>
                         <div className="filter-row align-middle">
                             <button className="clear-btn" onClick={clearFilters}>
