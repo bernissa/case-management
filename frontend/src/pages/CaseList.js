@@ -33,7 +33,8 @@ export default function CaseList() {
     const [toDate, setToDate] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [actionFilter, setActionFilter] = useState('');
-    const [repeatOffenderOnly, setRepeatOffenderOnly] = useState(false); // if applicable
+    // const [repeatOffenderOnly, setRepeatOffenderOnly] = useState(false);
+    const [hideRepeated, setHideRepeated] = useState(false);
     const [sortLatest, setSortLatest] = useState(false);
 
 
@@ -46,18 +47,17 @@ export default function CaseList() {
         setToDate('');
         setStatusFilter('');
         setActionFilter('');
-        setRepeatOffenderOnly(false);
+        setHideRepeated(false);
     };
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchName, driverIdFilter, caseIdFilter, tripIdFilter, fromDate, toDate, statusFilter, actionFilter, repeatOffenderOnly]);
+    }, [searchName, driverIdFilter, caseIdFilter, tripIdFilter, fromDate, toDate, statusFilter, actionFilter, hideRepeated]);
 
     const parseDate = (dateStr) => {
         const [day, month, year] = dateStr.split('/');
         return new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
     };
-
 
     const filteredCases = mockCaseList.filter((item) => {
         const matchesType = filterType === 'ALL' || item.type === filterType;
@@ -70,7 +70,6 @@ export default function CaseList() {
         const matchesFromDate = fromDate === '' || parseDate(item.effectDate) >= new Date(fromDate);
         const matchesToDate = toDate === '' || parseDate(item.effectDate) <= new Date(toDate);
 
-        const matchesRepeat = !repeatOffenderOnly || item.repeatOffender === true;
 
         return (
             matchesType &&
@@ -81,25 +80,53 @@ export default function CaseList() {
             matchesStatus &&
             matchesAction &&
             matchesFromDate &&
-            matchesToDate &&
-            matchesRepeat
+            matchesToDate
         );
     });
 
 
-
     // Pagination Logic
-    const totalCases = filteredCases.length;
-    const totalPages = Math.ceil(totalCases / casesPerPage);
+    // const totalCases = filteredCases.length;
+    // const totalPages = Math.ceil(totalCases / casesPerPage);
     const indexOfLastCase = currentPage * casesPerPage;
     const indexOfFirstCase = indexOfLastCase - casesPerPage;
     // const currentCases = filteredCases.slice(indexOfFirstCase, indexOfLastCase);
-    const sortedCases = sortLatest
-        ? [...filteredCases].sort((a, b) => parseDate(b.effectDate) - parseDate(a.effectDate))
+
+    // const sortedCases = sortLatest
+    //     ? [...filteredCases].sort((a, b) => parseDate(b.effectDate) - parseDate(a.effectDate))
+    //     : filteredCases;
+
+    // const currentCases = sortedCases.slice(indexOfFirstCase, indexOfLastCase);
+
+    function getMostRecentCasesByDriver(cases) {
+        const grouped = {};
+
+        cases.forEach((c) => {
+            const current = grouped[c.driverId];
+            const currentDate = current ? parseDate(current.effectDate) : null;
+            const cDate = parseDate(c.effectDate);
+
+            if (!current || cDate > currentDate) {
+                grouped[c.driverId] = c;
+            }
+        });
+
+        return Object.values(grouped);
+    }
+
+    const filteredCasesAfterDistinct = hideRepeated
+        ? getMostRecentCasesByDriver(filteredCases)
         : filteredCases;
+
+    const sortedCases = sortLatest
+        ? [...filteredCasesAfterDistinct].sort((a, b) => parseDate(b.effectDate) - parseDate(a.effectDate))
+        : filteredCasesAfterDistinct;
 
     const currentCases = sortedCases.slice(indexOfFirstCase, indexOfLastCase);
 
+    // Based on filteredCasesAfterDistinct (final list after applying hideRepeated)
+    const totalCases = filteredCasesAfterDistinct.length;
+    const totalPages = Math.ceil(totalCases / casesPerPage);
 
 
     const goToPage = (pageNumber) => {
@@ -113,7 +140,11 @@ export default function CaseList() {
     const deliveryCount = mockCaseList.filter(item => item.type === "Delivery").length;
     const accidentCount = mockCaseList.filter(item => item.type === "Accident").length;
 
-
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages || 1); // fallback to 1 if no pages
+        }
+    }, [totalPages, currentPage]);
 
 
     return (
@@ -237,12 +268,12 @@ export default function CaseList() {
                             </button>
 
                             <label className="switch-label">
-                                <span style={{ marginRight: '8px' }}>List Repeated Offenders</span>
+                                <span style={{ marginRight: '8px' }}>Hide Repeated Offenders</span>
                                 <label className="switch">
                                     <input
                                         type="checkbox"
-                                        checked={repeatOffenderOnly}
-                                        onChange={(e) => setRepeatOffenderOnly(e.target.checked)}
+                                        checked={hideRepeated}
+                                        onChange={(e) => setHideRepeated(e.target.checked)}
                                     />
                                     <span className="slider round"></span>
                                 </label>
