@@ -745,7 +745,7 @@ input:checked+.slider:before {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 342px;
+  gap: 47px;
 }
 
 .add-case-input-search {
