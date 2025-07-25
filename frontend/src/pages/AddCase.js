@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import infoicon from '../assets/material-symbols_info.png';
 
 export default function AddCase() {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -35,7 +36,11 @@ export default function AddCase() {
                             <input type="text" placeholder="Enter a Trip ID" className='add-case-input-search' />
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                            <label className='add-case-label'>Type</label>
+                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                <label className='add-case-label'>Type</label>
+                                <img src={infoicon} alt="Info Icon" className="info-icon"/>
+                            </div>
+                            
                             <select name="type" id="type" className='add-case-dropdown'>
                                 <option value="Ride-Hailing" className='add-case-dropdown-option'>Ride-Hailing</option>
                                 <option value="Delivery" className='add-case-dropdown-option'>Delivery</option>

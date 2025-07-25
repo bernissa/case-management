@@ -759,7 +759,7 @@ input:checked+.slider:before {
   gap: 16px;
   align-self: stretch;
   width: 378px;
-}
+} 
 
 .add-case-input {
   border-radius: 5px;
@@ -772,6 +772,11 @@ input:checked+.slider:before {
   gap: 16px;
   align-self: stretch;
   width: 278px;
+}
+
+.info-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .add-case-dropdown {
