@@ -409,7 +409,7 @@ input[type="checkbox"]:checked+.toggle-switch::before {
 
 
 .highlight-text {
-  background: var(--Purple-Gradient, linear-gradient(180deg, #800080 0%, #9D00FF 100%));
+  background: var(--Vivid-Purple, #7123D0);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -649,31 +649,161 @@ input:checked+.slider:before {
   margin-bottom: 1rem;
 }
 
-.customer-service-table-wrapper {
+/* .customer-service-table-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   font-size: 0.875rem;
   color: #374151;
+} */
+
+.customer-service-table-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* more flexible */
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: #374151;
 }
 
-.customer-service-table {
+
+/* .customer-service-table {
   width: 100%;
   border-collapse: collapse;
   box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.05);
+  display: flex;
+  width: 450px;
+  flex-direction: column;
+  align-items: flex-start;
+} */
+
+.customer-service-table {
+  width: 100%;
+  /* replaces fixed 450px */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* stretch rows to full width */
 }
 
-.customer-service-table td {
+
+/* .customer-service-table td {
   border: 1px solid rgb(200, 200, 200);
   padding: 1rem 0.75rem;
   vertical-align: top;
   font-weight: bold;
-}
+} */
 
-.customer-service-table .label {
+/* .customer-service-table .label {
   font-weight: 600;
   white-space: nowrap;
+} */
+
+/* .tableheader {
+  display: flex;
+  width: 180px;
+  height: 65px;
+  padding: 16px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: #D0D0D0;
 }
+
+.tabledetail {
+  display: flex;
+  height: 64.833px;
+  padding: 16px;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: #FFF;
+}
+
+.tablerow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+} */
+
+.tablerow {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  height: 65px;
+}
+
+/* .tableheader {
+  flex: 1;
+  width: 180px;
+  padding: 16px;
+  background: #D0D0D0;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  font-size: 16px;
+  align-items: center;
+  color: #000;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.tabledetail {
+  flex: 2;
+  padding: 16px;
+  background: #FFF;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  align-items: center;
+  color: #000;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+} */
+
+.tableheader {
+  display: flex; /* ✅ add this */
+  align-items: center; /* ✅ center vertically */
+  flex: 1;
+  width: 180px;
+  padding: 16px;
+  background: #D0D0D0;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  color: #000;
+}
+
+.tabledetail {
+  display: flex; /* ✅ add this */
+  align-items: center; /* ✅ center vertically */
+  flex: 2;
+  padding: 16px;
+  background: #FFF;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  color: #000;
+}
+
+
+@media (max-width: 640px) {
+  .customer-service-table-wrapper {
+    grid-template-columns: 1fr;
+    /* stack on small screens */
+  }
+}
+
 
 .red-text {
   color: red
@@ -908,7 +1038,7 @@ input:checked+.slider:before {
   font-weight: 600;
   line-height: normal;
   letter-spacing: 0.36px;
-  background: var(--Purple-Gradient, linear-gradient(180deg, #800080 0%, #9D00FF 100%));
+  background: var(--Vivid-Purple, #7123D0);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -997,9 +1127,9 @@ input:checked+.slider:before {
 }
 
 .active-type {
-  background: var(--Purple-Gradient, linear-gradient(180deg, #800080 0%, #9D00FF 100%));
+  background: var(--Vivid-Purple, #7123D0);
   box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.25) inset, 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  border-color: var(--Purple-Gradient, linear-gradient(180deg, #800080 0%, #9D00FF 100%));
+  border-color: var(--Vivid-Purple, #7123D0);
 }
 
 .page-container {
