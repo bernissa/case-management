@@ -649,13 +649,31 @@ input:checked+.slider:before {
   margin-bottom: 1rem;
 }
 
-/* .customer-service-table-wrapper {
+.cs-and-compliance-table-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 48px;
   font-size: 0.875rem;
   color: #374151;
-} */
+}
+
+.cs-and-compliance-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.05);
+}
+
+.cs-and-compliance-table td {
+  border: 1px solid rgb(200, 200, 200);
+  padding: 1rem 0.75rem;
+  vertical-align: top;
+  font-weight: bold;
+}
+
+.cs-and-compliance-table .label {
+  font-weight: 600;
+  white-space: nowrap;
+}
 
 .customer-service-table-wrapper {
   display: grid;
@@ -667,15 +685,6 @@ input:checked+.slider:before {
 }
 
 
-/* .customer-service-table {
-  width: 100%;
-  border-collapse: collapse;
-  box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.05);
-  display: flex;
-  width: 450px;
-  flex-direction: column;
-  align-items: flex-start;
-} */
 
 .customer-service-table {
   width: 100%;
@@ -686,18 +695,6 @@ input:checked+.slider:before {
   /* stretch rows to full width */
 }
 
-
-/* .customer-service-table td {
-  border: 1px solid rgb(200, 200, 200);
-  padding: 1rem 0.75rem;
-  vertical-align: top;
-  font-weight: bold;
-} */
-
-/* .customer-service-table .label {
-  font-weight: 600;
-  white-space: nowrap;
-} */
 
 /* .tableheader {
   display: flex;
@@ -889,7 +886,7 @@ input:checked+.slider:before {
   gap: 16px;
   align-self: stretch;
   width: 378px;
-}
+} 
 
 .add-case-input {
   border-radius: 5px;
@@ -904,6 +901,12 @@ input:checked+.slider:before {
   width: 278px;
 }
 
+.info-icon {
+  width: 24px;
+  height: 24px;
+  aspect-ratio: 1/1;
+}
+
 .add-case-dropdown {
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.50);
@@ -913,6 +916,7 @@ input:checked+.slider:before {
   align-items: center;
   gap: 77px;
   align-self: stretch;
+  width: 237px;
 }
 
 .add-case-dropdown-option {
@@ -927,8 +931,11 @@ input:checked+.slider:before {
 }
 
 .add-case-label {
-  margin: 4px;
-  margin-top: 8px;
+  color: #000;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .case-detail-item-flex-start {
@@ -943,8 +950,8 @@ input:checked+.slider:before {
 }
 
 .add-case-textarea {
-  width: 200%;
-  height: fit-content;
+  width: 98%;
+  height: 298px;
   resize: vertical;
   font-size: 16px;
   border-radius: 5px;
@@ -960,14 +967,6 @@ input:checked+.slider:before {
 
 .margintop8px {
   margin-top: 8px;
-}
-
-.compliance-layout {
-  display: flex;
-  flex-direction: row;
-  gap: 48px;
-  align-items: flex-start;
-  justify-content: space-between;
 }
 
 .compliance-input {
