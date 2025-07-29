@@ -823,7 +823,7 @@ input:checked+.slider:before {
 }
 
 .add-case-textarea {
-  width: 200%;
+  width: 98%;
   height: 298px;
   resize: vertical;
   font-size: 16px;
