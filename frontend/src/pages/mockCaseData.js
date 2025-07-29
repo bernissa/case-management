@@ -1,17 +1,19 @@
 export const mockCaseList = [
     {
         id: '0001',
-        name: 'Chong Theng Ng',
-        contact: '90527878',
         driverImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        driverId: 'GEODR216600',
-        tripId: '1102374284',
+        name: 'Chong Theng Ng',
         type: 'Ride-Hailing',
+        source: 'Walk In',
         effectDate: '24/3/2025',
-        action: 'BAN',
-        status: 'Resolved',
+        driverId: 'GEODR216600',
+        contact: '90527878',
         email: 'chongthengng@gmail.com',
-        violation: 'Aggressive Behavior (L)',
+        tripId: '1102374284',
+        violation: 'Aggressive Behavior',
+        status: 'Resolved',
+        action: 'BAN',
+        duration: 'Permanent',
         remarks: `The driver has been permanently banned due to unacceptable and aggressive behavior. The individual showed up at the office premises and proceeded to act in a confrontational and disrespectful manner.
   
   During the incident, the driver raised their voice and began yelling at two staff members, Nalini and Jayden, causing a disruption in the workplace and creating a hostile environment.
@@ -20,7 +22,6 @@ export const mockCaseList = [
   
   As a result, immediate disciplinary action was taken, and the driver’s account has been permanently banned.`,
         customerService: {
-            source: 'Walk In',
             userType: 'Driver',
             fleetType: 'Taxi (TDVL)',
             transactionId: '-',
@@ -29,6 +30,8 @@ export const mockCaseList = [
             incidentDate: '21/3/2025',
             startTime: '10.35 am',
             endTime: '11.14 am',
+            ticketDate: '21/3/2025',
+            resolvedBy: 'Evelyn',
             resolvedDate: '24/3/2025',
         },
         compliance: {
@@ -36,6 +39,8 @@ export const mockCaseList = [
             verdictBy: 'Auto',
             reinstatedBy: '-',
             handler: 'Nalini',
+            suspensionStartDate: '24/3/2025',
+            suspensionEndDate: '-',
         }
     },
     {
