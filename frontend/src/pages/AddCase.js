@@ -161,12 +161,14 @@ export default function AddCase() {
                         <tbody>
                             <tr><td className="">Input By:</td><td><input type="text" placeholder="Source" className='add-case-input-table' /></td></tr>
                             <tr><td className="">Verdict By:</td><td><input type="text" placeholder="User Type" className='add-case-input-table' /></td></tr>
+                            <tr><td className="">Suspension Start Date:</td><td><input type="date" placeholder="Suspension Start Date" className='add-case-input-table' /></td></tr>
                         </tbody>
                     </table>
                     <table className="cs-and-compliance-table">
                         <tbody>
                             <tr><td className="">Reinstated By:</td><td><input type="date" placeholder="Incident Date" className='add-case-input-table' /></td></tr>
                             <tr><td className="">Staff handling case:</td><td><input type="time" placeholder="Start Time" className='add-case-input-table' /></td></tr>
+                            <tr><td className="">Suspension End Date:</td><td><input type="date" placeholder="Suspension End Date" className='add-case-input-table' /></td></tr>
                         </tbody>
                     </table>
                 </div>
