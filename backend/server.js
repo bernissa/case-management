@@ -1,8 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
-
 
 // Load environment variables
 dotenv.config();
@@ -11,16 +11,14 @@ dotenv.config();
 connectDB();
 
 const app = express();
+app.use(cors()); // To allow cross origin req
 app.use(express.json()); // To parse JSON request bodies
 
-// Register case routes
+// Routes
 const caseRoutes = require('./routes/caseRoutes');
 app.use('/api/cases', caseRoutes);
-
-// Use the route
 app.use('/api/users', userRoutes);
 
-// routes
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
