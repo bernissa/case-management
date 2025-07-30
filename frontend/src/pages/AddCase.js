@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, } from 'react';
 import { userData } from './userData'
 import { mockCaseList } from './mockCaseData';
 import Select from 'react-select';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddCase() {
     const [selectedImage, setSelectedImage] = useState(null);
+    const navigate = useNavigate();
 
     const [formInputs, setFormInputs] = useState({
         source: '',
@@ -93,6 +95,7 @@ export default function AddCase() {
         mockCaseList.push(newCase);
         console.log('✅ Case added:', newCase);
         alert('Case added!');
+        navigate('/cases');
         // const storedCases = JSON.parse(localStorage.getItem('cases')) || [];
         // storedCases.push(newCase);
         // localStorage.setItem('cases', JSON.stringify(storedCases));
@@ -160,6 +163,7 @@ export default function AddCase() {
                             </div>
 
                             <select name="type" id="type" className='add-case-dropdown' value={formInputs.source} onChange={(e) => setFormInputs({ ...formInputs, source: e.target.value })}>
+                                <option value="-" className='add-case-dropdown-option'>-</option>
                                 <option value="Walk-In" className='add-case-dropdown-option'>Walk-In</option>
                                 <option value="Email" className='add-case-dropdown-option'>Email</option>
                                 <option value="Hotline" className='add-case-dropdown-option'>In-App Chat</option>
@@ -208,6 +212,7 @@ export default function AddCase() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     <label className='add-case-label'>Status</label>
                     <select name="type" id="type" className='add-case-dropdown' value={formInputs.status} onChange={(e) => setFormInputs({ ...formInputs, status: e.target.value })}>
+                        <option value="-" className='add-case-dropdown-option'>-</option>
                         <option value="Pending" className='add-case-dropdown-option'>Pending</option>
                         <option value="Resolved" className='add-case-dropdown-option'>Resolved</option>
                         <option value="Closed" className='add-case-dropdown-option'>Closed</option>
@@ -216,6 +221,7 @@ export default function AddCase() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "16px" }}>
                     <label className='add-case-label'>Follow-Up-Action</label>
                     <select name="type" id="type" className='add-case-dropdown' value={formInputs.action} onChange={(e) => setFormInputs({ ...formInputs, action: e.target.value })}>
+                        <option value="-" className='add-case-dropdown-option'>-</option>
                         <option value="WARNING" className='add-case-dropdown-option'>WARNING</option>
                         <option value="SUSPENSION" className='add-case-dropdown-option'>SUSPENSION</option>
                         <option value="BAN" className='add-case-dropdown-option'>BAN</option>
@@ -224,6 +230,7 @@ export default function AddCase() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "16px" }}>
                     <label className='add-case-label'>Duration</label>
                     <select name="type" id="type" className='add-case-dropdown' value={formInputs.duration} onChange={(e) => setFormInputs({ ...formInputs, duration: e.target.value })}>
+                        <option value="-" className='add-case-dropdown-option'>-</option>
                         <option value="None" className='add-case-dropdown-option'>None</option>
                         <option value="6 Months" className='add-case-dropdown-option'>6 Months</option>
                         <option value="Permanent" className='add-case-dropdown-option'>Permanent</option>
