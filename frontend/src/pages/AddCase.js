@@ -7,6 +7,20 @@ export default function AddCase() {
     const [selectedImage, setSelectedImage] = useState(null);
     const navigate = useNavigate();
 
+    function replaceEmptyWithDash(obj) {
+        const newObj = {};
+        for (const key in obj) {
+            const value = obj[key];
+            if (typeof value === 'object' && value !== null) {
+                newObj[key] = replaceEmptyWithDash(value); // Recursively handle nested objects
+            } else {
+                newObj[key] = value === '' ? '-' : value;
+            }
+        }
+        return newObj;
+    }
+
+
     const [formInputs, setFormInputs] = useState({
         source: '',
         tripId: '',
@@ -51,7 +65,7 @@ export default function AddCase() {
         const currentDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
 
         const newCase = {
-            profile: driverDetails.driverImage || '',
+            profile: driverDetails.profile || '',
             name: driverDetails.name || '',
             type: driverDetails.type || '',
             source: formInputs.source || '',
@@ -88,8 +102,10 @@ export default function AddCase() {
             }
         };
 
+        const cleanedCase = replaceEmptyWithDash(newCase);
+
         try {
-            const response = await axios.post('http://localhost:5000/api/cases', newCase); // change URL to your actual backend route
+            const response = await axios.post('http://localhost:5000/api/cases', cleanedCase); // change URL to your actual backend route
             console.log('✅ Case added:', response.data);
             alert('Case successfully added!');
             navigate('/cases');
@@ -140,7 +156,7 @@ export default function AddCase() {
                                 }))}
                                 onChange={(selectedOption) => {
                                     if (selectedOption) {
-                                        setSelectedImage(selectedOption.driverData.driverImage);
+                                        setSelectedImage(selectedOption.driverData.profile);
                                         setDriverDetails(selectedOption.driverData);
                                     } else {
                                         // If cleared

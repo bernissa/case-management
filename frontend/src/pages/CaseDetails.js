@@ -90,7 +90,7 @@ export default function CaseDetailPage() {
 
             <div className="case-detail-item">
                 <h3><strong>Case Details</strong></h3>
-                <p><strong>Case ID:</strong> {data.id}</p>
+                <p><strong>Case ID:</strong> {data._id}</p>
                 <p><strong>Trip ID:</strong> {data.tripId}</p>
                 <p className='red-text'><strong>Violation:</strong> {data.violation}</p>
             </div>
