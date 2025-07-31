@@ -11,7 +11,7 @@ const customerServiceSchema = new mongoose.Schema({
   endTime: String,
   ticketDate: String,
   resolvedBy: String,
-  resolvedDate: String
+  resolvedDate: String,
 }, { _id: false });
 
 const complianceSchema = new mongoose.Schema({
@@ -20,26 +20,26 @@ const complianceSchema = new mongoose.Schema({
   reinstatedBy: String,
   handler: String,
   suspensionStartDate: String,
-  suspensionEndDate: String
+  suspensionEndDate: String,
 }, { _id: false });
 
 const caseSchema = new mongoose.Schema({
-  profile: String,
+  profile: String, // profile image URL
   name: { type: String, required: true },
-  type: String,
+  type: { type: String, enum: ['Ride-Hailing', 'Delivery', 'Accident'], required: true },
   source: String,
-  effectDate: String,
+  effectDate: String, // "DD/MM/YYYY"
   userId: { type: String, required: true },
   contact: String,
   email: String,
   tripId: String,
   violation: String,
-  status: String,
-  action: String,
+  status: { type: String, enum: ['Pending', 'Resolved', 'Closed'], default: 'Pending' },
+  action: { type: String, enum: ['WARNING', 'SUSPENSION', 'BAN'] },
   duration: String,
   remarks: String,
   customerService: customerServiceSchema,
-  compliance: complianceSchema
+  compliance: complianceSchema,
 }, { timestamps: true });
 
 module.exports = mongoose.model('Case', caseSchema);
