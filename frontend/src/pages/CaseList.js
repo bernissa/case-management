@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import '../styles.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FiFilter, FiEdit2, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { FiFilter, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import binIcon from '../assets/bin-icon.svg';
 
 export default function CaseList() {
   const [cases, setCases] = useState([]);
@@ -27,6 +28,21 @@ export default function CaseList() {
   const [sortLatest, setSortLatest] = useState(false);
 
   const navigate = useNavigate();
+
+  const handleDelete = async (id) => {
+    const confirm = window.confirm('Are you sure you want to delete this case?');
+    if (!confirm) return;
+
+    try {
+      await axios.delete(`http://localhost:5000/api/cases/${id}`);
+      alert('Case deleted!');
+      // Optionally refresh the list
+      setCases(prev => prev.filter(item => item._id !== id));
+    } catch (err) {
+      console.error('Failed to delete case:', err);
+      alert('Something went wrong.');
+    }
+  };
 
   useEffect(() => {
     const fetchCases = async () => {
@@ -85,34 +101,34 @@ export default function CaseList() {
     );
   });
 
-const parseCustomDate = (str) => {
-  if (!str || !str.includes('/')) return new Date(str);
-  const [day, month, year] = str.split('/');
-  return new Date(`${year}-${month}-${day}`);
-};
+  const parseCustomDate = (str) => {
+    if (!str || !str.includes('/')) return new Date(str);
+    const [day, month, year] = str.split('/');
+    return new Date(`${year}-${month}-${day}`);
+  };
 
-const showLatestOfRepeatedOffenders = (cases) => {
-  const grouped = {};
-  const counts = {};
+  const showLatestOfRepeatedOffenders = (cases) => {
+    const grouped = {};
+    const counts = {};
 
-  cases.forEach((c) => {
-    const userId = c.userId;
-    const rawDate = c.customerService?.incidentDate || c.effectDate;
-    const parsed = parseCustomDate(rawDate);
-    counts[userId] = (counts[userId] || 0) + 1;
+    cases.forEach((c) => {
+      const userId = c.userId;
+      const rawDate = c.customerService?.incidentDate || c.effectDate;
+      const parsed = parseCustomDate(rawDate);
+      counts[userId] = (counts[userId] || 0) + 1;
 
-    const existing = grouped[userId];
-    const existingDate = existing ? parseCustomDate(existing.customerService?.incidentDate || existing.effectDate) : null;
+      const existing = grouped[userId];
+      const existingDate = existing ? parseCustomDate(existing.customerService?.incidentDate || existing.effectDate) : null;
 
-    if (!existing || parsed > existingDate) {
-      grouped[userId] = c;
-    }
-  });
+      if (!existing || parsed > existingDate) {
+        grouped[userId] = c;
+      }
+    });
 
-  return Object.entries(counts)
-    .filter(([_, count]) => count > 1)
-    .map(([userId]) => grouped[userId]);
-};
+    return Object.entries(counts)
+      .filter(([_, count]) => count > 1)
+      .map(([userId]) => grouped[userId]);
+  };
 
   const filteredCasesAfterToggle = showRepeatedOnly
     ? showLatestOfRepeatedOffenders(filteredCases)
@@ -120,10 +136,10 @@ const showLatestOfRepeatedOffenders = (cases) => {
 
   const sortedCases = sortLatest
     ? [...filteredCasesAfterToggle].sort((a, b) => {
-        const dateA = parseCustomDate(a.customerService?.incidentDate || a.effectDate);
-        const dateB = parseCustomDate(b.customerService?.incidentDate || b.effectDate);
-        return dateB - dateA;
-        })
+      const dateA = parseCustomDate(a.customerService?.incidentDate || a.effectDate);
+      const dateB = parseCustomDate(b.customerService?.incidentDate || b.effectDate);
+      return dateB - dateA;
+    })
     : filteredCasesAfterToggle;
 
   const totalCases = sortedCases.length;
@@ -255,7 +271,18 @@ const showLatestOfRepeatedOffenders = (cases) => {
                 <td>{item.effectDate}</td>
                 <td className="red-text bold-text">{item.action}</td>
                 <td className="bold-text">{item.status}</td>
-                <td><FiEdit2 className="edit-icon" /></td>
+                <td>
+                  <img
+                    src={binIcon}
+                    alt="delete"
+                    className="delete-icon"
+                    onClick={(e) => {
+                      e.stopPropagation(); // prevents row click navigation
+                      handleDelete(item._id);
+                    }}
+                  />
+                </td>
+
               </tr>
             ))}
           </tbody>

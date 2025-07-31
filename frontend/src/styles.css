@@ -432,6 +432,17 @@ input[type="checkbox"]:checked+.toggle-switch::before {
   transform: scale(1.1);
 }
 
+.delete-icon {
+  cursor: pointer;
+  color: rgb(255, 0, 0);
+  transition: all 0.2s ease-in-out;
+}
+
+.delete-icon:hover {
+  color: #ff7f7f;
+  transform: scale(1.1);
+}
+
 .pagination {
   display: flex;
   justify-content: center;
