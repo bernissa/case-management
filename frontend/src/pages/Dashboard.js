@@ -5,7 +5,8 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, PieChart, Pie, Cell, Legend
 } from 'recharts';
-import { mockCaseList } from './mockCaseData';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import total from '../assets/solar_archive-linear.svg';
 import ridehailingicon from '../assets/mingcute_car-line.svg';
 import deliveryicon from '../assets/solar_delivery-outline.svg';
@@ -63,14 +64,30 @@ const isInCurrentWeek = (dateStr) => {
 
 
 export default function Dashboard() {
-  const totalCases = mockCaseList.length;
+  const [caseList, setCaseList] = useState([]);
 
-  const caseTypeCounts = mockCaseList.reduce((acc, curr) => {
+  useEffect(() => {
+    const fetchCases = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/cases');
+        setCaseList(response.data);
+      } catch (error) {
+        console.error('Error fetching case data:', error);
+      }
+    };
+
+    fetchCases();
+  }, []);
+
+  const totalCases = caseList.length;
+
+
+  const caseTypeCounts = caseList.reduce((acc, curr) => {
     acc[curr.type] = (acc[curr.type] || 0) + 1;
     return acc;
   }, {});
 
-  const statusCounts = mockCaseList.reduce((acc, curr) => {
+  const statusCounts = caseList.reduce((acc, curr) => {
     acc[curr.status] = (acc[curr.status] || 0) + 1;
     return acc;
   }, {});
@@ -78,7 +95,7 @@ export default function Dashboard() {
   // Create data array for Pie Chart
   const caseTypeData = Object.entries(caseTypeCounts).map(([name, value]) => ({ name, value }));
 
-  const weeklyData = getWeeklyCaseCounts(mockCaseList);
+  const weeklyData = getWeeklyCaseCounts(caseList);
 
   const weekdayOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const sortedWeeklyData = weekdayOrder.map(day => weeklyData.find(d => d.name === day) || { name: day, cases: 0 });
