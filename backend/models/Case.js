@@ -24,12 +24,12 @@ const complianceSchema = new mongoose.Schema({
 }, { _id: false });
 
 const caseSchema = new mongoose.Schema({
-  driverImage: String,
+  profile: String,
   name: { type: String, required: true },
   type: String,
   source: String,
   effectDate: String,
-  driverId: { type: String, required: true },
+  userId: { type: String, required: true },
   contact: String,
   email: String,
   tripId: String,
