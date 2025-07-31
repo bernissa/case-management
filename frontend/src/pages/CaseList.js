@@ -1,380 +1,248 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles.css';
-import { FiFilter, FiEdit2, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { mockCaseList } from './mockCaseData';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { useEffect } from 'react';
+import { FiFilter, FiEdit2, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 export default function CaseList() {
-    const [showFilters, setShowFilters] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const casesPerPage = 5;
+  const [cases, setCases] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const casesPerPage = 5;
+  const [showFilters, setShowFilters] = useState(true);
+  const [filterType, setFilterType] = useState('ALL');
 
-    const [filterType, setFilterType] = useState("ALL");
-    const handleFilterTabClick = (type) => {
-        setFilterType(type);
-        setCurrentPage(1); // Reset to page 1 when switching tab
+  const [searchName, setSearchName] = useState('');
+  const [driverIdFilter, setDriverIdFilter] = useState('');
+  const [caseIdFilter, setCaseIdFilter] = useState('');
+  const [tripIdFilter, setTripIdFilter] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [actionFilter, setActionFilter] = useState('');
+  const [hideRepeated, setHideRepeated] = useState(false);
+  const [sortLatest, setSortLatest] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/cases');
+        setCases(res.data);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load cases');
+        setLoading(false);
+      }
     };
+    fetchCases();
+  }, []);
 
+  const handleRowClick = (id) => {
+    navigate(`/cases/${id}`);
+  };
 
-    const navigate = useNavigate();
+  const clearFilters = () => {
+    setSearchName('');
+    setDriverIdFilter('');
+    setCaseIdFilter('');
+    setTripIdFilter('');
+    setFromDate('');
+    setToDate('');
+    setStatusFilter('');
+    setActionFilter('');
+    setHideRepeated(false);
+  };
 
-    const handleRowClick = (id) => {
-        navigate(`/cases/${id}`);
-    };
+  const parseDate = (dateStr) => new Date(dateStr);
 
-    const [searchName, setSearchName] = useState('');
-    const [driverIdFilter, setDriverIdFilter] = useState('');
-    const [caseIdFilter, setCaseIdFilter] = useState('');
-    const [tripIdFilter, setTripIdFilter] = useState('');
-    const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
-    const [actionFilter, setActionFilter] = useState('');
-    // const [repeatOffenderOnly, setRepeatOffenderOnly] = useState(false);
-    const [hideRepeated, setHideRepeated] = useState(false);
-    const [sortLatest, setSortLatest] = useState(false);
+  const filteredCases = cases.filter((item) => {
+    const matchesType = filterType === 'ALL' || item.type === filterType;
+    const matchesName = item.name?.toLowerCase().includes(searchName.toLowerCase());
+    const matchesDriverId = item.driverId?.includes(driverIdFilter);
+    const matchesCaseId = item._id?.includes(caseIdFilter);
+    const matchesTripId = item.tripId?.includes(tripIdFilter);
+    const matchesStatus = !statusFilter || item.status === statusFilter;
+    const matchesAction = !actionFilter || item.action === actionFilter;
 
-
-    const clearFilters = () => {
-        setSearchName('');
-        setDriverIdFilter('');
-        setCaseIdFilter('');
-        setTripIdFilter('');
-        setFromDate('');
-        setToDate('');
-        setStatusFilter('');
-        setActionFilter('');
-        setHideRepeated(false);
-    };
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchName, driverIdFilter, caseIdFilter, tripIdFilter, fromDate, toDate, statusFilter, actionFilter, hideRepeated]);
-
-    const parseDate = (dateStr) => {
-        const [day, month, year] = dateStr.split('/');
-        return new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
-    };
-
-    const filteredCases = mockCaseList.filter((item) => {
-        const matchesType = filterType === 'ALL' || item.type === filterType;
-        const matchesName = item.name.toLowerCase().includes(searchName.toLowerCase());
-        const matchesDriverId = item.driverId.includes(driverIdFilter);
-        const matchesCaseId = item.id.toString().includes(caseIdFilter);
-        const matchesTripId = item.tripId.includes(tripIdFilter);
-        const matchesStatus = statusFilter === '' || item.status === statusFilter;
-        const matchesAction = actionFilter === '' || item.action === actionFilter;
-        const matchesFromDate = fromDate === '' || parseDate(item.effectDate) >= new Date(fromDate);
-        const matchesToDate = toDate === '' || parseDate(item.effectDate) <= new Date(toDate);
-
-
-        return (
-            matchesType &&
-            matchesName &&
-            matchesDriverId &&
-            matchesCaseId &&
-            matchesTripId &&
-            matchesStatus &&
-            matchesAction &&
-            matchesFromDate &&
-            matchesToDate
-        );
-    });
-
-
-    // Pagination Logic
-    // const totalCases = filteredCases.length;
-    // const totalPages = Math.ceil(totalCases / casesPerPage);
-    const indexOfLastCase = currentPage * casesPerPage;
-    const indexOfFirstCase = indexOfLastCase - casesPerPage;
-    // const currentCases = filteredCases.slice(indexOfFirstCase, indexOfLastCase);
-
-    // const sortedCases = sortLatest
-    //     ? [...filteredCases].sort((a, b) => parseDate(b.effectDate) - parseDate(a.effectDate))
-    //     : filteredCases;
-
-    // const currentCases = sortedCases.slice(indexOfFirstCase, indexOfLastCase);
-
-    function getMostRecentCasesByDriver(cases) {
-        const grouped = {};
-
-        cases.forEach((c) => {
-            const current = grouped[c.driverId];
-            const currentDate = current ? parseDate(current.effectDate) : null;
-            const cDate = parseDate(c.effectDate);
-
-            if (!current || cDate > currentDate) {
-                grouped[c.driverId] = c;
-            }
-        });
-
-        return Object.values(grouped);
-    }
-
-    const filteredCasesAfterDistinct = hideRepeated
-        ? getMostRecentCasesByDriver(filteredCases)
-        : filteredCases;
-
-    const sortedCases = sortLatest
-        ? [...filteredCasesAfterDistinct].sort((a, b) => parseDate(b.effectDate) - parseDate(a.effectDate))
-        : filteredCasesAfterDistinct;
-
-    const currentCases = sortedCases.slice(indexOfFirstCase, indexOfLastCase);
-
-    // Based on filteredCasesAfterDistinct (final list after applying hideRepeated)
-    const totalCases = filteredCasesAfterDistinct.length;
-    const totalPages = Math.ceil(totalCases / casesPerPage);
-
-
-    const goToPage = (pageNumber) => {
-        if (pageNumber >= 1 && pageNumber <= totalPages) {
-            setCurrentPage(pageNumber);
-        }
-    };
-
-    const totalCount = mockCaseList.length;
-    const rideHailingCount = mockCaseList.filter(item => item.type === "Ride-Hailing").length;
-    const deliveryCount = mockCaseList.filter(item => item.type === "Delivery").length;
-    const accidentCount = mockCaseList.filter(item => item.type === "Accident").length;
-
-    useEffect(() => {
-        if (currentPage > totalPages) {
-            setCurrentPage(totalPages || 1); // fallback to 1 if no pages
-        }
-    }, [totalPages, currentPage]);
-
+    const effectDate = parseDate(item.effectDate);
+    const matchesFromDate = !fromDate || effectDate >= new Date(fromDate);
+    const matchesToDate = !toDate || effectDate <= new Date(toDate);
 
     return (
-        <div className="case-list-container">
-            {/* Top Tabs */}
-            <div className="case-tabs">
-                <button
-                    className={`tab ${filterType === 'ALL' ? 'active' : ''}`}
-                    onClick={() => handleFilterTabClick('ALL')}
-                >
-                    ALL CASES ({totalCount})
-                </button>
-                <button
-                    className={`tab ${filterType === 'Ride-Hailing' ? 'active' : ''}`}
-                    onClick={() => handleFilterTabClick('Ride-Hailing')}
-                >
-                    RIDE HAILING ({rideHailingCount})
-                </button>
-                <button
-                    className={`tab ${filterType === 'Delivery' ? 'active' : ''}`}
-                    onClick={() => handleFilterTabClick('Delivery')}
-                >
-                    DELIVERY ({deliveryCount})
-                </button>
-                <button
-                    className={`tab ${filterType === 'Accident' ? 'active' : ''}`}
-                    onClick={() => handleFilterTabClick('Accident')}
-                >
-                    ACCIDENTS ({accidentCount})
-                </button>
-            </div>
-
-
-
-            {/* Filters */}
-            <div className="filter-section">
-                <div className="filter-header" onClick={() => setShowFilters(!showFilters)}>
-                    <FiFilter />
-                    <span>Filters</span>
-                    {showFilters ? <FiChevronUp /> : <FiChevronDown />}
-                </div>
-                {showFilters && (
-                    <div className="filters">
-                        <div className="">
-                            <div className='search-container'>
-                                <FontAwesomeIcon icon={faMagnifyingGlass} className='search-icon' />
-                                <input
-                                    type="text"
-                                    placeholder="Search Driver Name"
-                                    value={searchName}
-                                    onChange={(e) => setSearchName(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <div className="filter-row">
-                            <input
-                                type="text"
-                                placeholder="Driver ID"
-                                value={driverIdFilter}
-                                onChange={(e) => setDriverIdFilter(e.target.value)}
-                                className='filter-input'
-                            />
-                            <input
-                                type="text"
-                                placeholder="Case ID"
-                                value={caseIdFilter}
-                                onChange={(e) => setCaseIdFilter(e.target.value)}
-                                className='filter-input'
-                            />
-                            <input
-                                type="text"
-                                placeholder="Trip ID"
-                                value={tripIdFilter}
-                                onChange={(e) => setTripIdFilter(e.target.value)}
-                                className='filter-input'
-                            />
-                        </div>
-                        <div className="filter-row">
-                            <input
-                                type="date"
-                                value={fromDate}
-                                onChange={(e) => setFromDate(e.target.value)}
-                                className='filter-input'
-                            />
-                            <input
-                                type="date"
-                                value={toDate}
-                                onChange={(e) => setToDate(e.target.value)}
-                                className='filter-input'
-                            />
-                            <select
-                                className="list-dropdown"
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                            >
-                                <option value="">Case Status</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Resolved">Resolved</option>
-                            </select>
-                            <select
-                                className="list-dropdown"
-                                value={actionFilter}
-                                onChange={(e) => setActionFilter(e.target.value)}
-                            >
-                                <option value="">Follow-Up Action</option>
-                                <option value="WARNING">Warning</option>
-                                <option value="SUSPENSION">Suspension</option>
-                                <option value="BAN">Ban</option>
-                            </select>
-                            <button
-                                className={`sort-btn ${sortLatest ? 'active-sort' : ''}`}
-                                onClick={() => setSortLatest(!sortLatest)}
-                            >
-                                Sort Latest {sortLatest ? '↓' : ''}
-                            </button>
-
-                        </div>
-                        <div className="filter-row align-middle">
-                            <button className="clear-btn" onClick={clearFilters}>
-                                CLEAR FILTER
-                            </button>
-
-                            <label className="switch-label">
-                                <span style={{ marginRight: '8px' }}>Hide Repeated Offenders</span>
-                                <label className="switch">
-                                    <input
-                                        type="checkbox"
-                                        checked={hideRepeated}
-                                        onChange={(e) => setHideRepeated(e.target.checked)}
-                                    />
-                                    <span className="slider round"></span>
-                                </label>
-                            </label>
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            {/* Case Table */}
-            <div className="case-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>S/N</th>
-                            <th>Driver Name</th>
-                            <th>Contact</th>
-                            <th>Driver ID</th>
-                            <th>Trip ID</th>
-                            <th>Effect Date</th>
-                            <th>Fllw-Up Action</th>
-                            <th>Case Status</th>
-                            <th className=''><a href='/addcase' className='add-icon'>+</a></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentCases.map((item, index) => (
-                            <tr key={index}
-                                onClick={() => handleRowClick(item.id)}
-                                className="clickable-row">
-                                <td>{item.id}</td>
-                                {/* <td className="highlight-text">{item.name}</td> */}
-                                {/* <td><Link to={`/record/${item.driverId}`} className="name-link highlight-text">{item.name}</Link></td> */}
-                                <td className="name-link highlight-text">{item.name}</td>
-                                <td>{item.contact}</td>
-                                <td>{item.driverId}</td>
-                                <td>{item.tripId}</td>
-                                <td>{item.effectDate}</td>
-                                <td className="red-text bold-text">{item.action}</td>
-                                <td className='bold-text'>{item.status}</td>
-                                <td><FiEdit2 className="edit-icon" /></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                {/* Pagination Controls */}
-                <div className="pagination">
-                    <span
-                        className={`page-nav ${currentPage === 1 ? 'page-disabled' : ''}`}
-                        onClick={() => goToPage(currentPage - 1)}
-                    >
-                        ‹ Previous
-                    </span>
-
-                    {/* First Page */}
-                    <span
-                        className={`page-number ${currentPage === 1 ? 'page-current' : ''}`}
-                        onClick={() => goToPage(1)}
-                    >
-                        1
-                    </span>
-
-                    {/* Ellipsis before middle pages */}
-                    {currentPage > 3 && <span className="ellipsis">...</span>}
-
-                    {/* Middle pages (current - 1, current, current + 1) */}
-                    {Array.from({ length: 3 }, (_, i) => currentPage - 1 + i)
-                        .filter(p => p > 1 && p < totalPages)
-                        .map(p => (
-                            <span
-                                key={p}
-                                className={`page-number ${currentPage === p ? 'page-current' : ''}`}
-                                onClick={() => goToPage(p)}
-                            >
-                                {p}
-                            </span>
-                        ))}
-
-                    {/* Ellipsis after middle pages */}
-                    {currentPage < totalPages - 2 && <span className="ellipsis">...</span>}
-
-                    {/* Last Page */}
-                    {totalPages > 1 && (
-                        <span
-                            className={`page-number ${currentPage === totalPages ? 'page-current' : ''}`}
-                            onClick={() => goToPage(totalPages)}
-                        >
-                            {totalPages}
-                        </span>
-                    )}
-
-                    <span
-                        className={`page-nav ${currentPage === totalPages ? 'page-disabled' : ''}`}
-                        onClick={() => goToPage(currentPage + 1)}
-                    >
-                        Next ›
-                    </span>
-                </div>
-
-            </div>
-        </div>
+      matchesType &&
+      matchesName &&
+      matchesDriverId &&
+      matchesCaseId &&
+      matchesTripId &&
+      matchesStatus &&
+      matchesAction &&
+      matchesFromDate &&
+      matchesToDate
     );
+  });
+
+  const getMostRecentCasesByDriver = (cases) => {
+    const grouped = {};
+    cases.forEach((c) => {
+      const current = grouped[c.driverId];
+      const currentDate = current ? parseDate(current.effectDate) : null;
+      const cDate = parseDate(c.effectDate);
+      if (!current || (cDate > currentDate)) {
+        grouped[c.driverId] = c;
+      }
+    });
+    return Object.values(grouped);
+  };
+
+  const filteredCasesAfterDistinct = hideRepeated
+    ? getMostRecentCasesByDriver(filteredCases)
+    : filteredCases;
+
+  const sortedCases = sortLatest
+    ? [...filteredCasesAfterDistinct].sort((a, b) => parseDate(b.effectDate) - parseDate(a.effectDate))
+    : filteredCasesAfterDistinct;
+
+  const totalCases = filteredCasesAfterDistinct.length;
+  const totalPages = Math.ceil(totalCases / casesPerPage);
+  const indexOfLastCase = currentPage * casesPerPage;
+  const indexOfFirstCase = indexOfLastCase - casesPerPage;
+  const currentCases = sortedCases.slice(indexOfFirstCase, indexOfLastCase);
+
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterType, searchName, driverIdFilter, caseIdFilter, tripIdFilter, fromDate, toDate, statusFilter, actionFilter, hideRepeated]);
+
+  if (loading) return <div className="loader">Loading cases...</div>;
+  if (error) return <div className="error">{error}</div>;
+
+  return (
+    <div className="case-list-container">
+      {/* Tabs */}
+      <div className="case-tabs">
+        {['ALL', 'Ride-Hailing', 'Delivery', 'Accident'].map((type) => (
+          <button
+            key={type}
+            className={`tab ${filterType === type ? 'active' : ''}`}
+            onClick={() => setFilterType(type)}
+          >
+            {type.toUpperCase()} ({cases.filter(c => type === 'ALL' || c.type === type).length})
+          </button>
+        ))}
+      </div>
+
+      {/* Filters */}
+      <div className="filter-section">
+        <div className="filter-header" onClick={() => setShowFilters(!showFilters)}>
+          <FiFilter />
+          <span>Filters</span>
+          {showFilters ? <FiChevronUp /> : <FiChevronDown />}
+        </div>
+        {showFilters && (
+          <div className="filters">
+            <div className="search-container">
+              <FontAwesomeIcon icon={faMagnifyingGlass} className='search-icon' />
+              <input
+                type="text"
+                placeholder="Search Driver Name"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+              />
+            </div>
+            <div className="filter-row">
+              <input className="filter-input" placeholder="Driver ID" value={driverIdFilter} onChange={(e) => setDriverIdFilter(e.target.value)} />
+              <input className="filter-input" placeholder="Case ID" value={caseIdFilter} onChange={(e) => setCaseIdFilter(e.target.value)} />
+              <input className="filter-input" placeholder="Trip ID" value={tripIdFilter} onChange={(e) => setTripIdFilter(e.target.value)} />
+            </div>
+            <div className="filter-row">
+              <input type="date" className="filter-input" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+              <input type="date" className="filter-input" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+              <select className="list-dropdown" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                <option value="">Case Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Resolved">Resolved</option>
+              </select>
+              <select className="list-dropdown" value={actionFilter} onChange={(e) => setActionFilter(e.target.value)}>
+                <option value="">Follow-Up Action</option>
+                <option value="WARNING">Warning</option>
+                <option value="SUSPENSION">Suspension</option>
+                <option value="BAN">Ban</option>
+              </select>
+              <button className={`sort-btn ${sortLatest ? 'active-sort' : ''}`} onClick={() => setSortLatest(!sortLatest)}>
+                Sort Latest {sortLatest ? '↓' : ''}
+              </button>
+            </div>
+            <div className="filter-row align-middle">
+              <button className="clear-btn" onClick={clearFilters}>CLEAR FILTER</button>
+              <label className="switch-label">
+                <span style={{ marginRight: '8px' }}>Hide Repeated Offenders</span>
+                <label className="switch">
+                  <input type="checkbox" checked={hideRepeated} onChange={(e) => setHideRepeated(e.target.checked)} />
+                  <span className="slider round"></span>
+                </label>
+              </label>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Table */}
+      <div className="case-table">
+        <table>
+          <thead>
+            <tr>
+              <th>S/N</th>
+              <th>Driver Name</th>
+              <th>Contact</th>
+              <th>Driver ID</th>
+              <th>Trip ID</th>
+              <th>Effect Date</th>
+              <th>Fllw-Up Action</th>
+              <th>Case Status</th>
+              <th><a href="/addcase" className="add-icon">+</a></th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentCases.length === 0 ? (
+              <tr>
+                <td colSpan="9" style={{ textAlign: 'center' }}>No cases found.</td>
+              </tr>
+            ) : currentCases.map((item, index) => (
+              <tr key={item._id} onClick={() => handleRowClick(item._id)} className="clickable-row">
+                <td>{indexOfFirstCase + index + 1}</td>
+                <td className="name-link highlight-text">{item.name}</td>
+                <td>{item.contact}</td>
+                <td>{item.driverId}</td>
+                <td>{item.tripId}</td>
+                <td>{item.effectDate}</td>
+                <td className="red-text bold-text">{item.action}</td>
+                <td className="bold-text">{item.status}</td>
+                <td><FiEdit2 className="edit-icon" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Pagination */}
+        <div className="pagination">
+          <span className={`page-nav ${currentPage === 1 ? 'page-disabled' : ''}`} onClick={() => goToPage(currentPage - 1)}>‹ Previous</span>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <span key={i} className={`page-number ${currentPage === i + 1 ? 'page-current' : ''}`} onClick={() => goToPage(i + 1)}>{i + 1}</span>
+          ))}
+          <span className={`page-nav ${currentPage === totalPages ? 'page-disabled' : ''}`} onClick={() => goToPage(currentPage + 1)}>Next ›</span>
+        </div>
+      </div>
+    </div>
+  );
 }
