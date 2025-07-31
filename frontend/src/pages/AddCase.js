@@ -133,7 +133,6 @@ export default function AddCase() {
                 <div className="cs-and-compliance-table-wrapper">
                     <table className="cs-and-compliance-table">
                         <tbody>
-                            <tr><td className="">Source of the case:</td><td><input type="text" placeholder="Source" className='add-case-input-table' /></td></tr>
                             <tr><td className="">User Type:</td><td><input type="text" placeholder="User Type" className='add-case-input-table' /></td></tr>
                             <tr><td className="">Fleet Type:</td><td><input type="text" placeholder="Fleet Type" className='add-case-input-table' /></td></tr>
                             <tr><td className="">Transaction ID:</td><td><input type="text" placeholder="Transaction ID" className='add-case-input-table' /></td></tr>

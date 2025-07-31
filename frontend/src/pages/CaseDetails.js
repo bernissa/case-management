@@ -22,14 +22,14 @@ export default function CaseDetailPage() {
                 <div className="case-detail-driver-name">
                     <img
                         // src="https://i.pravatar.cc/100?img=3"
-                        src={data.driverImage}
+                        src={data.profile}
                         alt="Driver"
                         className="case-detail-avatar"
                     />
                     <div>
                         <h2 className="name-link highlight-text">
                             <a
-                                href={`/record/${data.driverId}`}
+                                href={`/record/${data.userId}`}
                                 className="name-link highlight-text"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -52,7 +52,7 @@ export default function CaseDetailPage() {
             {/* 3 Columns */}
             <div className="case-detail-item">
                 <h3><strong>Violator Details</strong></h3>
-                <p><strong>Driver ID:</strong> {data.driverId}</p>
+                <p><strong>User ID:</strong> {data.userId}</p>
                 <p><strong>Contact:</strong> {data.contact}</p>
                 <p><strong>Email:</strong> {data.email}</p>
             </div>
