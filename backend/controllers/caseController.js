@@ -1,7 +1,7 @@
 const Case = require('../models/Case');
 
 // Get all cases
-exports.getCases = async (req, res) => {
+const getCases = async (req, res) => {
   try {
     const cases = await Case.find();
     res.json(cases);
@@ -11,7 +11,7 @@ exports.getCases = async (req, res) => {
 };
 
 // Get single case
-exports.getCaseById = async (req, res) => {
+const getCaseById = async (req, res) => {
   try {
     const singleCase = await Case.findById(req.params.id);
     if (!singleCase) return res.status(404).json({ message: 'Case not found' });
@@ -22,7 +22,7 @@ exports.getCaseById = async (req, res) => {
 };
 
 // Create a new case
-exports.createCase = async (req, res) => {
+const createCase = async (req, res) => {
   try {
     const newCase = new Case(req.body);
     const savedCase = await newCase.save();
@@ -33,7 +33,7 @@ exports.createCase = async (req, res) => {
 };
 
 // Update a case
-exports.updateCase = async (req, res) => {
+const updateCase = async (req, res) => {
   try {
     const updated = await Case.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updated) return res.status(404).json({ message: 'Case not found' });
@@ -44,7 +44,7 @@ exports.updateCase = async (req, res) => {
 };
 
 // Delete a case
-exports.deleteCase = async (req, res) => {
+const deleteCase = async (req, res) => {
   try {
     const deleted = await Case.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ message: 'Case not found' });
@@ -52,4 +52,13 @@ exports.deleteCase = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Delete failed', error });
   }
+};
+
+// Export all controllers properly
+module.exports = {
+  getCases,
+  getCaseById,
+  createCase,
+  updateCase,
+  deleteCase,
 };
