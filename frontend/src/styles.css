@@ -1465,3 +1465,57 @@ input:checked+.slider:before {
   border-radius: 10px;
   background: #FFF;
 }
+
+.add-case-input-search__control {
+  border-radius: 5px;
+  border: 1px solid #000;
+  background: #FFF;
+  height: 53px;
+  padding-left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 378px;
+  box-shadow: none; /* remove default focus shadow */
+}
+
+.add-case-input-search__control--is-focused {
+  border-color: #000;
+  box-shadow: 0 0 0 1px #000; /* keep border highlight on focus */
+}
+
+.add-case-input-search__value-container {
+  padding: 0; /* remove extra padding inside */
+}
+
+.add-case-input-search__input {
+  margin: 0; /* align input nicely */
+  padding: 0;
+}
+
+.add-case-input-search__single-value {
+  margin-left: 0;
+  color: black;
+}
+
+.add-case-input-search__menu {
+  border-radius: 5px;
+  border: 1px solid #000;
+  background: #fff;
+  width: 378px;
+  margin-top: 4px;
+  z-index: 1000;
+}
+
+.add-case-input-search__option {
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.add-case-input-search__option--is-focused {
+  background-color: #eee;
+}
+
+.add-case-input-search__option--is-selected {
+  background-color: #ddd;
+}
