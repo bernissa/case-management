@@ -1,10 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { mockCaseList } from './mockCaseData'; // update this path accordingly
+import axios from 'axios';
 
 export default function CaseDetailPage() {
     const { id } = useParams();
-    const data = mockCaseList.find(c => c.id === id);
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchCaseData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/cases/${id}`);
+                setData(response.data);
+                setLoading(false);
+            } catch (err) {
+                setError('Failed to load case data');
+                setLoading(false);
+            }
+        };
+
+        fetchCaseData();
+    }, [id]);
+
+    if (loading) {
+        return (
+            <div className="p-10 text-center text-blue-600 font-medium">
+                Loading case data...
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="p-10 text-center text-red-600 font-medium">
+                ❌ {error}
+            </div>
+        );
+    }
 
     if (!data) {
         return (
@@ -21,7 +54,6 @@ export default function CaseDetailPage() {
             <div className="case-detail-item xlarge">
                 <div className="case-detail-driver-name">
                     <img
-                        // src="https://i.pravatar.cc/100?img=3"
                         src={data.profile}
                         alt="Driver"
                         className="case-detail-avatar"
@@ -38,12 +70,11 @@ export default function CaseDetailPage() {
                             </a>
                         </h2>
 
-                        <p className=""><strong>Type: </strong>{data.type}</p>
-                        <p className=""><strong>Source of the case: </strong>{data.source}</p>
+                        <p><strong>Type: </strong>{data.type}</p>
+                        <p><strong>Source of the case: </strong>{data.source}</p>
                         <p className="text-sm text-gray-500"><strong>Case Date: </strong>{data.effectDate}</p>
                     </div>
                 </div>
-                {/* <a href='/editcase'><button className="btn-main">EDIT CASE</button></a> */}
                 <Link to={`/editcase/${id}`}>
                     <button className="btn-main">EDIT CASE</button>
                 </Link>
@@ -78,6 +109,7 @@ export default function CaseDetailPage() {
                     {data.remarks}
                 </p>
             </div>
+            
             {/* Customer Service */}
             <div className="case-detail-full">
                 <h3 className="customer-service-title">Customer Service</h3>
@@ -127,7 +159,5 @@ export default function CaseDetailPage() {
                 </div>
             </div>
         </div>
-
     );
 }
-
