@@ -35,7 +35,7 @@ const caseSchema = new mongoose.Schema({
   tripId: String,
   violation: String,
   status: { type: String, enum: ['Pending', 'Resolved', 'Closed'], default: 'Pending' },
-  action: { type: String, enum: ['WARNING', 'SUSPENSION', 'BAN'] },
+  action: String,
   duration: String,
   remarks: String,
   customerService: customerServiceSchema,

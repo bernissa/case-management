@@ -216,6 +216,7 @@
                                     <option value="Walk-In" className='add-case-dropdown-option'>Walk-In</option>
                                     <option value="Email" className='add-case-dropdown-option'>Email</option>
                                     <option value="In-App Chat" className='add-case-dropdown-option'>In-App Chat</option>
+                                    <option value="Others" className='add-case-dropdown-option'>Others</option>
                                 </select>
                             </div>
                         </div>
@@ -304,6 +305,7 @@
                             onChange={(e) => setFormInputs({ ...formInputs, action: e.target.value })}
                         >
                             <option value="-" className='add-case-dropdown-option'>-</option>
+                            <option value="None" className='add-case-dropdown-option'>None</option>
                             <option value="WARNING" className='add-case-dropdown-option'>WARNING</option>
                             <option value="SUSPENSION" className='add-case-dropdown-option'>SUSPENSION</option>
                             <option value="BAN" className='add-case-dropdown-option'>BAN</option>
@@ -324,6 +326,7 @@
                             <option value="None" className='add-case-dropdown-option'>None</option>
                             <option value="6 Months" className='add-case-dropdown-option'>6 Months</option>
                             <option value="Permanent" className='add-case-dropdown-option'>Permanent</option>
+                            <option value="Others" className='add-case-dropdown-option'>Others</option>
                         </select>
                     </div>
                 </div>
