@@ -184,7 +184,7 @@ export default function CaseList() {
         'Contact': item.contact,
         'Email': item.email,
         'Trip ID': item.tripId,
-        'Violation': item.violation,
+        'Violation / Issue': item.violation,
         'Status': item.status,
         'Follow-Up Action': item.action,
         'Duration': item.duration,

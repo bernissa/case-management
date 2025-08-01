@@ -199,7 +199,7 @@ export default function AddCase() {
 
             {/* 3 Columns */}
             <div className="case-detail-item">
-                <h3><strong>Violator Details</strong></h3>
+                <h3><strong>User Details</strong></h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     <label className='add-case-label'>User ID</label>
                     <input type="text" value={driverDetails.userId || ''} placeholder="User ID" className='add-case-input' readOnly />
@@ -225,7 +225,7 @@ export default function AddCase() {
                     <input type="text" placeholder="ID of Trip" className='add-case-input' value={formInputs.tripId} onChange={(e) => setFormInputs({ ...formInputs, tripId: e.target.value })} />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "16px" }}>
-                    <label className='add-case-label'>Violation</label>
+                    <label className='add-case-label'>Violation / Issue</label>
                     <input type="text" placeholder="Violation" className='add-case-input' value={formInputs.violation} onChange={(e) => setFormInputs({ ...formInputs, violation: e.target.value })} />
                 </div>
             </div>

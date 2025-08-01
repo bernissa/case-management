@@ -75,7 +75,7 @@ export default function CaseDetailPage() {
 
             {/* 3 Columns */}
             <div className="case-detail-item">
-                <h3><strong>Violator Details</strong></h3>
+                <h3><strong>User Details</strong></h3>
                 <p><strong>User ID:</strong> {data.userId}</p>
                 <p><strong>Contact:</strong> {data.contact}</p>
                 <p><strong>Email:</strong> {data.email}</p>
@@ -85,7 +85,7 @@ export default function CaseDetailPage() {
                 <h3><strong>Case Details</strong></h3>
                 <p><strong>Case ID:</strong> {data._id}</p>
                 <p><strong>Trip ID:</strong> {data.tripId}</p>
-                <p className='red-text'><strong>Violation:</strong> {data.violation}</p>
+                <p className='red-text'><strong>Violation / Issue:</strong> {data.violation}</p>
             </div>
 
             <div className="case-detail-item">
