@@ -148,27 +148,6 @@ export default function AddCase() {
                         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
 
                             <label className='add-case-label'>Full Name</label>
-                            {/* <Select
-                                options={userData.map(d => ({
-                                    value: d.userId,
-                                    label: `${d.name} (${d.userId})`,
-                                    driverData: d
-                                }))}
-                                onChange={(selectedOption) => {
-                                    if (selectedOption) {
-                                        setSelectedImage(selectedOption.driverData.profile);
-                                        setDriverDetails(selectedOption.driverData);
-                                    } else {
-                                        // If cleared
-                                        setSelectedImage(null);
-                                        setDriverDetails({});
-                                    }
-                                }}
-                                placeholder="Select Driver"
-                                isClearable
-                                classNamePrefix="add-case-input-search"
-                            /> */}
-
                             <Select
                                 options={userOptions}
                                 onChange={(selectedOption) => {
@@ -628,7 +607,6 @@ export default function AddCase() {
             </div>
 
             <div className='case-detail-full-nobg align-center'>
-                {/* <button className="btn-main add-btn">ADD CASE</button> */}
                 <button onClick={handleAddCase} className='btn-main add-btn'>Add Case</button>
 
             </div>

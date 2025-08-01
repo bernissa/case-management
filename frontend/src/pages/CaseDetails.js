@@ -60,14 +60,7 @@ export default function CaseDetailPage() {
                     />
                     <div>
                         <h2 className="name-link highlight-text">
-                            <a
-                                href={`/record/${data.userId}`}
-                                className="name-link highlight-text"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {data.name}
-                            </a>
+                            {data.name}
                         </h2>
 
                         <p><strong>Type: </strong>{data.type}</p>
@@ -109,7 +102,7 @@ export default function CaseDetailPage() {
                     {data.remarks}
                 </p>
             </div>
-            
+
             {/* Customer Service */}
             <div className="case-detail-full">
                 <h3 className="customer-service-title">Customer Service</h3>
