@@ -105,7 +105,7 @@ export default function AddCase() {
         const cleanedCase = replaceEmptyWithDash(newCase);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/cases', cleanedCase); // change URL to your actual backend route
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/cases`, cleanedCase); // change URL to your actual backend route
             console.log('✅ Case added:', response.data);
             alert('Case successfully added!');
             navigate('/cases');
@@ -118,7 +118,7 @@ export default function AddCase() {
     const [userOptions, setUserOptions] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/users') // adjust URL as needed
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/users`) // adjust URL as needed
             .then(res => {
                 const options = res.data.map(driver => ({
                     value: driver.userId,

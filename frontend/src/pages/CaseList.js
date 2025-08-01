@@ -35,7 +35,7 @@ export default function CaseList() {
     if (!confirm) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/cases/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/cases/${id}`);
       alert('Case deleted!');
       // Optionally refresh the list
       setCases(prev => prev.filter(item => item._id !== id));
@@ -48,7 +48,7 @@ export default function CaseList() {
   useEffect(() => {
     const fetchCases = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/cases');
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/cases`);
         setCases(res.data);
         setLoading(false);
       } catch (err) {

@@ -91,7 +91,7 @@
             };
 
             try {
-                const response = await axios.put(`http://localhost:5000/api/cases/${id}`, updatedCase); // change URL to your actual backend route
+                const response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/cases/${id}`, updatedCase); // change URL to your actual backend route
                 console.log('✅ Case updated:', response.data);
                 alert('Case successfully updated!');
                 navigate('/cases');
@@ -102,7 +102,7 @@
         };
 
         useEffect(() => {
-            axios.get(`http://localhost:5000/api/cases/${id}`)
+            axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/cases/${id}`)
                 .then(res => {
                     const caseData = res.data;
 
@@ -142,7 +142,7 @@
 
         const [userOptions, setUserOptions] = useState([]);
         useEffect(() => {
-            axios.get('http://localhost:5000/api/users') // adjust URL as needed
+            axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/users`) // adjust URL as needed
                 .then(res => {
                     const options = res.data.map(driver => ({
                         value: driver.userId,

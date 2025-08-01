@@ -11,7 +11,7 @@ export default function CaseDetailPage() {
     useEffect(() => {
         const fetchCaseData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/cases/${id}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/cases/${id}`);
                 setData(response.data);
                 setLoading(false);
             } catch (err) {

@@ -69,7 +69,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchCases = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/cases');
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/cases`);
         setCaseList(response.data);
       } catch (error) {
         console.error('Error fetching case data:', error);
