@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import * as XLSX from 'xlsx'; // Import the xlsx library
 import { FiFilter, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
@@ -172,6 +173,47 @@ export default function CaseList() {
   if (loading) return <div className="loader">Loading cases...</div>;
   if (error) return <div className="error">{error}</div>;
 
+  // Export to Excel Function
+  const exportToExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const exportData = sortedCases.map((item) => {
+      return {
+        'Case ID': item._id,
+        'User Name': item.name,
+        'User ID': item.userId,
+        'Contact': item.contact,
+        'Email': item.email,
+        'Trip ID': item.tripId,
+        'Violation': item.violation,
+        'Status': item.status,
+        'Follow-Up Action': item.action,
+        'Duration': item.duration,
+        'Remarks': item.remarks,
+        'Customer Type': item.customerService.userType,
+        'Fleet Type': item.customerService.fleetType,
+        'Transaction ID': item.customerService.transactionId,
+        'Service Type': item.customerService.serviceType,
+        'Type of Issue': item.customerService.typeOfIssue,
+        'Incident Date': item.customerService.incidentDate,
+        'Start Time': item.customerService.startTime,
+        'End Time': item.customerService.endTime,
+        'Ticket Created On': item.customerService.ticketDate,
+        'Resolved By': item.customerService.resolvedBy,
+        'Resolved Date': item.customerService.resolvedDate,
+        'Input By': item.compliance.inputBy,
+        'Verdict By': item.compliance.verdictBy,
+        'Suspension Start Date': item.compliance.suspensionStartDate,
+        'Suspension End Date': item.compliance.suspensionEndDate,
+        'Reinstated By': item.compliance.reinstatedBy,
+        'Staff Handling Case': item.compliance.handler,
+      };
+    });
+    
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    XLSX.utils.book_append_sheet(wb, ws, 'Case Data');
+    XLSX.writeFile(wb, 'CaseList.xlsx');
+  };
+
   return (
     <div className="case-list-container">
       {/* Tabs */}
@@ -196,8 +238,9 @@ export default function CaseList() {
         </div>
         {showFilters && (
           <div className="filters">
+            {/* Search and Filter Inputs */}
             <div className="search-container">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className='search-icon' />
+              <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
               <input
                 type="text"
                 placeholder="Search User Name"
@@ -237,6 +280,8 @@ export default function CaseList() {
                   <span className="slider round"></span>
                 </label>
               </label>
+              {/* Export Button */}
+              <button className="export-btn" onClick={exportToExcel}>Export to Excel</button>
             </div>
           </div>
         )}
